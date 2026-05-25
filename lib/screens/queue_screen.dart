@@ -372,11 +372,25 @@ class _QueueScreenState extends State<QueueScreen> {
   }
 
   Widget _statusChip(String status) {
-    final (label, color) = switch (status) {
-      'live'      => ('● LIVE', C8P.live),
-      'done'      => ('✓ TERMINÉ', C8P.felt2),
-      'scheduled' => ('PROGRAMMÉ', C8P.chalk2),
-      _           => ('EN ATTENTE', C8P.mute),
+    final color = switch (status) {
+      'live'      => C8P.live,
+      'done'      => C8P.felt2,
+      'scheduled' => C8P.chalk2,
+      _           => C8P.mute,
+    };
+    final child = switch (status) {
+      'live' => Row(mainAxisSize: MainAxisSize.min, children: [
+          const Icon(Icons.circle, size: 7, color: C8P.live),
+          const SizedBox(width: 4),
+          Text('LIVE', style: C8PTypo.mono(size: 9, color: C8P.live, letterSpacing: 0.14).copyWith(fontWeight: FontWeight.w700)),
+        ]),
+      'done' => Row(mainAxisSize: MainAxisSize.min, children: [
+          const Icon(Icons.check, size: 10, color: C8P.felt2),
+          const SizedBox(width: 3),
+          Text('TERMINÉ', style: C8PTypo.mono(size: 9, color: C8P.felt2, letterSpacing: 0.14).copyWith(fontWeight: FontWeight.w700)),
+        ]),
+      'scheduled' => Text('PROGRAMMÉ', style: C8PTypo.mono(size: 9, color: C8P.chalk2, letterSpacing: 0.14).copyWith(fontWeight: FontWeight.w700)),
+      _ => Text('EN ATTENTE', style: C8PTypo.mono(size: 9, color: C8P.mute, letterSpacing: 0.14).copyWith(fontWeight: FontWeight.w700)),
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -384,8 +398,7 @@ class _QueueScreenState extends State<QueueScreen> {
         color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(2),
       ),
-      child: Text(label, style: C8PTypo.mono(size: 9, color: color, letterSpacing: 0.14)
-          .copyWith(fontWeight: FontWeight.w700)),
+      child: child,
     );
   }
 }

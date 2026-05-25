@@ -31,8 +31,12 @@ class OfflineScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('● HORS-LIGNE DEPUIS 04:18',
-                       style: C8PTypo.mono(size: 10, color: C8P.live, letterSpacing: 0.16).copyWith(fontWeight: FontWeight.w700)),
+                  Row(mainAxisSize: MainAxisSize.min, children: [
+                    const Icon(Icons.circle, size: 7, color: C8P.live),
+                    const SizedBox(width: 4),
+                    Text('HORS-LIGNE DEPUIS 04:18',
+                         style: C8PTypo.mono(size: 10, color: C8P.live, letterSpacing: 0.16).copyWith(fontWeight: FontWeight.w700)),
+                  ]),
                   Text('RÉSEAU 4G PERDU', style: C8PTypo.mono(size: 10, color: C8P.chalk2, letterSpacing: 0.14)),
                 ],
               ),

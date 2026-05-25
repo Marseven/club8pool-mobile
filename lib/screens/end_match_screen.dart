@@ -55,7 +55,11 @@ class _EndMatchScreenState extends State<EndMatchScreen> {
                   ),
                   Column(
                     children: [
-                      Text('✓ MATCH TERMINÉ', style: C8PTypo.mono(size: 9, color: C8P.felt2, letterSpacing: 0.22)),
+                      Row(mainAxisSize: MainAxisSize.min, children: [
+                        const Icon(Icons.check_circle_outline, size: 12, color: C8P.felt2),
+                        const SizedBox(width: 4),
+                        Text('MATCH TERMINÉ', style: C8PTypo.mono(size: 9, color: C8P.felt2, letterSpacing: 0.22)),
+                      ]),
                       const SizedBox(height: 2),
                       Text('Validation', style: C8PTypo.sans(size: 13, weight: FontWeight.w700)),
                     ],
@@ -176,8 +180,17 @@ class _EndMatchScreenState extends State<EndMatchScreen> {
             children: [
               Text('${p?['first_name']} ${p?['last_name']}',
                    style: C8PTypo.sans(size: 12, weight: FontWeight.w700)),
-              Text(isSigned ? '✓ SIGNÉ' : '! EN ATTENTE',
-                   style: C8PTypo.mono(size: 9, color: isSigned ? C8P.felt2 : C8P.live, letterSpacing: 0.14)),
+              Row(mainAxisSize: MainAxisSize.min, children: [
+                if (isSigned) ...[
+                  const Icon(Icons.check, size: 9, color: C8P.felt2),
+                  const SizedBox(width: 3),
+                  Text('SIGNÉ', style: C8PTypo.mono(size: 9, color: C8P.felt2, letterSpacing: 0.14)),
+                ] else ...[
+                  const Icon(Icons.schedule, size: 9, color: C8P.live),
+                  const SizedBox(width: 3),
+                  Text('EN ATTENTE', style: C8PTypo.mono(size: 9, color: C8P.live, letterSpacing: 0.14)),
+                ],
+              ]),
             ],
           ),
           const SizedBox(height: 10),
@@ -190,14 +203,16 @@ class _EndMatchScreenState extends State<EndMatchScreen> {
                 border: Border.all(color: const Color(0x14FFFFFF)),
               ),
               alignment: Alignment.center,
-              child: Text(
-                isSigned ? '✓' : 'Toucher pour signer',
-                style: TextStyle(
-                  fontSize: isSigned ? 32 : 14,
-                  color: isSigned ? C8P.felt2 : C8P.mute2,
-                  fontFamily: 'cursive',
-                ),
-              ),
+              child: isSigned
+                  ? const Icon(Icons.check, size: 36, color: C8P.felt2)
+                  : Text(
+                      'Toucher pour signer',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: C8P.mute2,
+                        fontFamily: 'cursive',
+                      ),
+                    ),
             ),
           ),
         ],

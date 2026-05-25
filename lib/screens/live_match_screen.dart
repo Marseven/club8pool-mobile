@@ -128,8 +128,12 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: C8P.ink2,
           behavior: SnackBarBehavior.floating,
-          content: Text('⚠ Faute enregistrée · $name',
-              style: C8PTypo.mono(size: 11, color: C8P.live, letterSpacing: 0.1)),
+          content: Row(children: [
+            const Icon(Icons.warning_amber_rounded, size: 14, color: C8P.live),
+            const SizedBox(width: 8),
+            Text('Faute enregistrée · $name',
+                style: C8PTypo.mono(size: 11, color: C8P.live, letterSpacing: 0.1)),
+          ]),
           duration: const Duration(seconds: 2),
         ));
       }
@@ -140,7 +144,8 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
 
   void _showFouteSheet() {
     _showPlayerSheet(
-      title: '⚠ FAUTE',
+      icon: Icons.warning_amber_rounded,
+      title: 'FAUTE',
       subtitle: 'Quel joueur commet la faute ?',
       onA: () => _recordWarning('A'),
       onB: () => _recordWarning('B'),
@@ -149,7 +154,8 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
 
   void _showBlackFoulSheet() {
     _showPlayerSheet(
-      title: '✗ BLACK FOUL',
+      icon: Icons.close,
+      title: 'BLACK FOUL',
       subtitle: 'Qui commet le black foul ?\n(l\'adversaire gagne la frame)',
       onA: () { Navigator.of(context).pop(); _winFrame('B'); },
       onB: () { Navigator.of(context).pop(); _winFrame('A'); },
@@ -158,7 +164,8 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
 
   void _showEmpoche8Sheet() {
     _showPlayerSheet(
-      title: '◉ EMPOCHE LA 8',
+      icon: Icons.sports_score,
+      title: 'EMPOCHE LA 8',
       subtitle: 'Qui empoche la 8 balle ?',
       onA: () { Navigator.of(context).pop(); _winFrame('A'); },
       onB: () { Navigator.of(context).pop(); _winFrame('B'); },
@@ -166,6 +173,7 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
   }
 
   void _showPlayerSheet({
+    required IconData icon,
     required String title,
     required String subtitle,
     required VoidCallback onA,
@@ -186,8 +194,12 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title,
-                  style: C8PTypo.mono(size: 10, letterSpacing: 0.22, color: C8P.mute)),
+              Row(children: [
+                Icon(icon, size: 14, color: C8P.mute),
+                const SizedBox(width: 6),
+                Text(title,
+                    style: C8PTypo.mono(size: 10, letterSpacing: 0.22, color: C8P.mute)),
+              ]),
               const SizedBox(height: 6),
               Text(subtitle,
                   style: C8PTypo.sans(size: 15, weight: FontWeight.w700)),
@@ -289,8 +301,12 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
                       color: const Color(0x142DA876),
                       border: Border.all(color: const Color(0x662DA876)),
                     ),
-                    child: Text('● LIVE',
-                        style: C8PTypo.mono(size: 9, color: C8P.felt2, letterSpacing: 0.14)),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      const Icon(Icons.circle, size: 7, color: C8P.felt2),
+                      const SizedBox(width: 4),
+                      Text('LIVE',
+                          style: C8PTypo.mono(size: 9, color: C8P.felt2, letterSpacing: 0.14)),
+                    ]),
                   ),
                 ],
               ),
@@ -381,11 +397,11 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
                 const SizedBox(height: 6),
                 // ── Incident buttons ─────────────────────────────────
                 Row(children: [
-                  _incidentBtn('⚠ Faute', C8P.live, _showFouteSheet),
+                  _incidentBtn(Icons.warning_amber_rounded, 'FAUTE', C8P.live, _showFouteSheet),
                   const SizedBox(width: 6),
-                  _incidentBtn('✗ Black foul', C8P.live, _showBlackFoulSheet),
+                  _incidentBtn(Icons.close, 'BLACK FOUL', C8P.live, _showBlackFoulSheet),
                   const SizedBox(width: 6),
-                  _incidentBtn('◉ Empoche 8', C8P.chalk2, _showEmpoche8Sheet),
+                  _incidentBtn(Icons.sports_score, 'EMPOCHE 8', C8P.chalk2, _showEmpoche8Sheet),
                 ]),
               ]),
             ),
@@ -421,7 +437,8 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
                   ),
                   // Reset button — disabled when running or at 00:00
                   _chronoCircleBtn(
-                    label: '↺\nRÉINIT',
+                    icon: Icons.refresh_rounded,
+                    label: 'RÉINIT',
                     color: (!_chronoRunning && _chronoHasTime) ? C8P.chalk : C8P.mute,
                     bgColor: const Color(0x14FFFFFF),
                     onTap: (!_chronoRunning && _chronoHasTime) ? _chronoReset : null,
@@ -429,9 +446,10 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
                   const SizedBox(width: 14),
                   // Start / Stop button
                   _chronoCircleBtn(
+                    icon: _chronoRunning ? Icons.pause_rounded : Icons.play_arrow_rounded,
                     label: _chronoRunning
-                        ? '⏸\nARRÊTER'
-                        : (_chronoHasTime ? '▶\nREPRENDRE' : '▶\nDÉMARRER'),
+                        ? 'ARRÊTER'
+                        : (_chronoHasTime ? 'REPRENDRE' : 'DÉMARRER'),
                     color: _chronoRunning ? C8P.live : C8P.felt2,
                     bgColor: _chronoRunning
                         ? const Color(0x1AE5484D)
@@ -491,8 +509,7 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                   color: const Color(0x26E5484D),
-                  child: Text('⚠',
-                      style: C8PTypo.mono(size: 9, color: C8P.live)),
+                  child: const Icon(Icons.warning_amber_rounded, size: 12, color: C8P.live),
                 ),
               ],
             ]),
@@ -526,10 +543,8 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
                         borderRadius: BorderRadius.circular(3),
                       ),
                       alignment: Alignment.center,
-                      child: Text('−',
-                          style: C8PTypo.disp(
-                              size: 20,
-                              color: score > 0 ? C8P.mute : const Color(0x22FFFFFF))),
+                      child: Icon(Icons.remove, size: 20,
+                          color: score > 0 ? C8P.mute : const Color(0x22FFFFFF)),
                     ),
                   ),
                 ),
@@ -539,7 +554,7 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
         ),
       );
 
-  Widget _incidentBtn(String label, Color color, VoidCallback onTap) =>
+  Widget _incidentBtn(IconData icon, String label, Color color, VoidCallback onTap) =>
       Expanded(
         child: GestureDetector(
           onTap: onTap,
@@ -550,40 +565,41 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
               border: Border.all(color: color.withValues(alpha: 0.22)),
               borderRadius: BorderRadius.circular(3),
             ),
-            alignment: Alignment.center,
-            child: Text(label,
-                style: C8PTypo.sans(
-                    size: 10, color: color, weight: FontWeight.w600),
-                textAlign: TextAlign.center),
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Icon(icon, size: 14, color: color),
+              const SizedBox(height: 3),
+              Text(label, style: C8PTypo.mono(size: 9, color: color, letterSpacing: 0.08)
+                  .copyWith(fontWeight: FontWeight.w600)),
+            ]),
           ),
         ),
       );
 
   Widget _chronoCircleBtn({
+    required IconData icon,
     required String label,
     required Color color,
     required Color bgColor,
     Color? borderColor,
     required VoidCallback? onTap,
-  }) =>
-      GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: 62, height: 62,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: bgColor,
-            border: borderColor != null
-                ? Border.all(color: borderColor, width: 1.5)
-                : null,
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            label,
-            style: C8PTypo.mono(size: 9, color: color, letterSpacing: 0.06)
-                .copyWith(fontWeight: FontWeight.w700),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      );
+  }) => GestureDetector(
+    onTap: onTap,
+    child: Container(
+      width: 62, height: 62,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: bgColor,
+        border: borderColor != null ? Border.all(color: borderColor, width: 1.5) : null,
+      ),
+      alignment: Alignment.center,
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        Icon(icon, size: 18, color: onTap != null ? color : C8P.mute),
+        const SizedBox(height: 2),
+        Text(label,
+          style: C8PTypo.mono(size: 8, color: onTap != null ? color : C8P.mute, letterSpacing: 0.06)
+              .copyWith(fontWeight: FontWeight.w700),
+          textAlign: TextAlign.center),
+      ]),
+    ),
+  );
 }

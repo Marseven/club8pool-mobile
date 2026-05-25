@@ -154,11 +154,14 @@ class _PreMatchScreenState extends State<PreMatchScreen> {
                                          style: C8PTypo.sans(size: 13, weight: FontWeight.w700,
                                              color: _selectedTableId == t['id'] ? C8P.felt2 : C8P.chalk)),
                                     const SizedBox(height: 2),
-                                    Text(
-                                      t['live_match'] != null ? '● EN JEU' : 'LIBRE',
-                                      style: C8PTypo.mono(size: 9, letterSpacing: 0.12,
-                                          color: t['live_match'] != null ? C8P.live : C8P.mute),
-                                    ),
+                                    if (t['live_match'] != null)
+                                      Row(mainAxisSize: MainAxisSize.min, children: [
+                                        const Icon(Icons.circle, size: 7, color: C8P.live),
+                                        const SizedBox(width: 3),
+                                        Text('EN JEU', style: C8PTypo.mono(size: 9, letterSpacing: 0.12, color: C8P.live)),
+                                      ])
+                                    else
+                                      Text('LIBRE', style: C8PTypo.mono(size: 9, letterSpacing: 0.12, color: C8P.mute)),
                                   ]),
                                 ),
                               ),
@@ -207,13 +210,17 @@ class _PreMatchScreenState extends State<PreMatchScreen> {
                   child: _starting
                       ? const SizedBox(height: 18, width: 18,
                           child: CircularProgressIndicator(strokeWidth: 2, color: C8P.felt2))
-                      : Text(
-                          _selectedTableId != null
-                              ? '▸ DÉMARRER SUR ${_tables.firstWhere((t) => t['id'] == _selectedTableId, orElse: () => {'name': '?'})['name']}'
-                              : '▸ DÉMARRER LE MATCH',
-                          style: C8PTypo.sans(size: 14, color: C8P.ink, weight: FontWeight.w800)
-                              .copyWith(letterSpacing: 1.4),
-                        ),
+                      : Row(mainAxisSize: MainAxisSize.min, children: [
+                          const Icon(Icons.play_arrow_rounded, size: 18, color: C8P.ink),
+                          const SizedBox(width: 4),
+                          Text(
+                            _selectedTableId != null
+                                ? 'DÉMARRER SUR ${_tables.firstWhere((t) => t['id'] == _selectedTableId, orElse: () => {'name': '?'})['name']}'
+                                : 'DÉMARRER LE MATCH',
+                            style: C8PTypo.sans(size: 14, color: C8P.ink, weight: FontWeight.w800)
+                                .copyWith(letterSpacing: 1.4),
+                          ),
+                        ]),
                 ),
               ),
             ),

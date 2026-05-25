@@ -163,8 +163,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Text('VERSION 1.0.0',
                         style: C8PTypo.mono(size: 10, color: C8P.mute2)),
-                    Text('● EN LIGNE',
-                        style: C8PTypo.mono(size: 10, color: C8P.felt2)),
+                    Row(mainAxisSize: MainAxisSize.min, children: [
+                      const Icon(Icons.circle, size: 7, color: C8P.felt2),
+                      const SizedBox(width: 4),
+                      Text('EN LIGNE', style: C8PTypo.mono(size: 10, color: C8P.felt2)),
+                    ]),
                   ],
                 ),
               ],
