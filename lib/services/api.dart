@@ -71,9 +71,9 @@ class ApiService {
     return s.length > max ? '${s.substring(0, max)}… (${s.length - max} chars cut)' : s;
   }
 
-  Future<Map<String, dynamic>> login(String fgbCard, String pin) async {
+  Future<Map<String, dynamic>> login(String name, String pin) async {
     final response = await _dio.post('/referee/login', data: {
-      'fgb_card': fgbCard,
+      'name': name,
       'pin': pin,
     });
     final token = response.data['token'] as String;
