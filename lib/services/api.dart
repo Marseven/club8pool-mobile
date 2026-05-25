@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,7 +29,46 @@ class ApiService {
       },
     ));
 
+    // ─── Logging ───────────────────────────────────────────────────
+    // Trace chaque requête/réponse/erreur dans la console (flutter logs,
+    // Xcode/Android Studio, devtools). Le token est tronqué pour ne pas
+    // polluer la sortie.
+    dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) {
+        final auth = options.headers['Authorization']?.toString() ?? '';
+        final shortAuth = auth.length > 30 ? '${auth.substring(0, 30)}…' : auth;
+        _log('→ ${options.method} ${options.uri}\n'
+            '  headers: { Authorization: $shortAuth }\n'
+            '  body: ${options.data ?? '(none)'}');
+        handler.next(options);
+      },
+      onResponse: (response, handler) {
+        _log('← ${response.statusCode} ${response.requestOptions.method} ${response.requestOptions.uri}\n'
+            '  data: ${_truncate(response.data)}');
+        handler.next(response);
+      },
+      onError: (e, handler) {
+        _log('⚠ ${e.response?.statusCode ?? '?'} ${e.requestOptions.method} ${e.requestOptions.uri}\n'
+            '  type: ${e.type}\n'
+            '  message: ${e.message}\n'
+            '  response: ${_truncate(e.response?.data)}');
+        handler.next(e);
+      },
+    ));
+
     return ApiService._(dio);
+  }
+
+  static void _log(String msg) {
+    // ignore: avoid_print
+    print('[API] $msg');
+    developer.log(msg, name: 'club8pool.api');
+  }
+
+  static String _truncate(dynamic data, [int max = 400]) {
+    if (data == null) return '(empty)';
+    final s = data.toString();
+    return s.length > max ? '${s.substring(0, max)}… (${s.length - max} chars cut)' : s;
   }
 
   Future<Map<String, dynamic>> login(String fgbCard, String pin) async {

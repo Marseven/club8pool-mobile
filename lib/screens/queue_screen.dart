@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../services/api.dart';
 import '../theme/colors.dart';
@@ -33,10 +34,12 @@ class _QueueScreenState extends State<QueueScreen> {
         _matches = results[1] as List;
         _loading = false;
       });
-    } catch (_) {
+    } catch (e, s) {
+      debugPrint('[Queue] load failed: $e');
+      debugPrintStack(stackTrace: s);
       if (!mounted) return;
       setState(() {
-        _error = 'Erreur de chargement';
+        _error = 'Erreur de chargement · ${e.toString().split("\n").first}';
         _loading = false;
       });
     }

@@ -29,9 +29,14 @@ class _TablesScreenState extends State<TablesScreen> {
       final t = await api.tables();
       if (!mounted) return;
       setState(() { _tables = t; _loading = false; });
-    } catch (_) {
+    } catch (e, s) {
+      debugPrint('[Tables] load failed: $e');
+      debugPrintStack(stackTrace: s);
       if (!mounted) return;
-      setState(() { _error = 'Erreur de chargement'; _loading = false; });
+      setState(() {
+        _error = 'Erreur de chargement · ${e.toString().split("\n").first}';
+        _loading = false;
+      });
     }
   }
 
