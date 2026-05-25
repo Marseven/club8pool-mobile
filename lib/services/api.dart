@@ -54,6 +54,11 @@ class ApiService {
     return r.data as List;
   }
 
+  Future<List<dynamic>> tables() async {
+    final r = await _dio.get('/referee/tables');
+    return r.data as List;
+  }
+
   Future<Map<String, dynamic>> match(int id) async {
     final r = await _dio.get('/referee/matches/$id');
     return r.data;

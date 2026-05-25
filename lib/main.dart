@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'screens/login_screen.dart';
 import 'screens/queue_screen.dart';
+import 'screens/tables_screen.dart';
 import 'screens/live_match_screen.dart';
 import 'screens/pre_match_screen.dart';
 import 'screens/end_match_screen.dart';
@@ -34,6 +35,7 @@ class Club8PoolApp extends StatelessWidget {
       routes: {
         '/login': (_) => const LoginScreen(),
         '/queue': (_) => const QueueScreen(),
+        '/tables': (_) => const TablesScreen(),
         '/offline': (_) => const OfflineScreen(),
       },
       onGenerateRoute: (settings) {
