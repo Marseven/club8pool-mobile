@@ -148,6 +148,16 @@ class ApiService {
     return r.data;
   }
 
+  Future<Map<String, dynamic>> undoFrame(int matchId, String player) async {
+    final r = await _dio.post('/referee/matches/$matchId/undo-frame', data: {'player': player});
+    return r.data;
+  }
+
+  Future<Map<String, dynamic>> warning(int matchId, String player) async {
+    final r = await _dio.post('/referee/matches/$matchId/warning', data: {'player': player});
+    return r.data;
+  }
+
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
