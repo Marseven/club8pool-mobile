@@ -31,15 +31,15 @@ class RefereeNav extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _item(context, '◰', 'MATCHS', active == 'queue', () => _go(context, '/queue')),
-          _item(context, '▢', 'TABLES', active == 'tables', () => _go(context, '/tables')),
-          _item(context, '↪', 'DÉCO.', false, () => _logout(context)),
+          _item(context, Icons.calendar_today_outlined, 'MATCHS', active == 'queue', () => _go(context, '/queue')),
+          _item(context, Icons.grid_view_outlined, 'TABLES', active == 'tables', () => _go(context, '/tables')),
+          _item(context, Icons.logout_outlined, 'DÉCO.', false, () => _logout(context)),
         ],
       ),
     );
   }
 
-  Widget _item(BuildContext context, String icon, String label, bool isActive, VoidCallback onTap) {
+  Widget _item(BuildContext context, IconData icon, String label, bool isActive, VoidCallback onTap) {
     final color = isActive ? C8P.felt2 : C8P.mute;
     return Expanded(
       child: InkWell(
@@ -49,7 +49,7 @@ class RefereeNav extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(icon, style: TextStyle(fontSize: 18, color: color, height: 1)),
+              Icon(icon, size: 20, color: color),
               const SizedBox(height: 4),
               Text(label, style: C8PTypo.mono(size: 10, color: color, letterSpacing: 0.12)),
             ],
