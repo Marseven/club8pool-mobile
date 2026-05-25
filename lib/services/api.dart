@@ -133,6 +133,21 @@ class ApiService {
     return r.data;
   }
 
+  Future<List<dynamic>> available() async {
+    final r = await _dio.get('/referee/available');
+    return r.data as List;
+  }
+
+  Future<Map<String, dynamic>> claim(int id) async {
+    final r = await _dio.post('/referee/matches/$id/claim');
+    return r.data;
+  }
+
+  Future<Map<String, dynamic>> assignTable(int matchId, int tableId) async {
+    final r = await _dio.post('/referee/matches/$matchId/table', data: {'table_id': tableId});
+    return r.data;
+  }
+
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
