@@ -143,7 +143,7 @@ class _TablesScreenState extends State<TablesScreen> {
               const SizedBox(height: 12),
               Text(
                 'POULE ${live['pool']?['name'] ?? '—'}'
-                  + (live['referee']?['name'] != null ? ' · ARB. ${(live['referee']['name'] as String).toUpperCase()}' : ''),
+                '${live['referee']?['name'] != null ? ' · ARB. ${(live['referee']['name'] as String).toUpperCase()}' : ''}',
                 style: C8PTypo.mono(size: 10, letterSpacing: 0.18),
               ),
               const SizedBox(height: 10),
@@ -184,8 +184,8 @@ class _TablesScreenState extends State<TablesScreen> {
   Widget _chip(String text, Color color) => Container(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
     decoration: BoxDecoration(
-      border: Border.all(color: color.withOpacity(0.5)),
-      color: color.withOpacity(0.08),
+      border: Border.all(color: color.withValues(alpha: 0.5)),
+      color: color.withValues(alpha: 0.08),
       borderRadius: BorderRadius.circular(2),
     ),
     child: Text(text, style: C8PTypo.mono(size: 10, color: color, letterSpacing: 0.14).copyWith(fontWeight: FontWeight.w700)),

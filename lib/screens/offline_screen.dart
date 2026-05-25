@@ -75,7 +75,7 @@ class OfflineScreen extends StatelessWidget {
               child: ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: 22),
                 itemCount: queue.length,
-                separatorBuilder: (_, __) => Container(height: 1, color: const Color(0x0FFFFFFF)),
+                separatorBuilder: (_, _) => Container(height: 1, color: const Color(0x0FFFFFFF)),
                 itemBuilder: (_, i) {
                   final e = queue[i];
                   final isFailed = e['state'] == 'failed';
