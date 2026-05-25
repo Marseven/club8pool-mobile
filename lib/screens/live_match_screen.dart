@@ -14,6 +14,7 @@ class LiveMatchScreen extends StatefulWidget {
 
 class _LiveMatchScreenState extends State<LiveMatchScreen> {
   late Map _match;
+  bool _autoEnding = false;
   int _shotClock = 30;
   Timer? _shotTimer;
   Timer? _uiTimer;
@@ -88,6 +89,10 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
 
   // ── Scoring ──────────────────────────────────────────────────────
 
+  int get _raceTo => _match['phase'] == 'knockout'
+      ? ((_match['competition']?['knockout_race_to'] ?? _match['competition']?['race_to'] ?? 7) as num).toInt()
+      : ((_match['competition']?['pool_race_to'] ?? _match['competition']?['race_to'] ?? 3) as num).toInt();
+
   Future<void> _winFrame(String winner) async {
     setState(() {
       if (winner == 'A') {
@@ -100,8 +105,32 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
     try {
       final api = await ApiService.create();
       final r = await api.frame(_match['id'], winner);
-      if (mounted) setState(() => _match = Map.from(r['match']));
+      if (mounted) {
+        setState(() => _match = Map.from(r['match']));
+        _checkAutoEnd();
+      }
     } catch (_) {}
+  }
+
+  /// Navigate to end screen automatically once a player reaches race-to.
+  void _checkAutoEnd() {
+    if (_autoEnding) return;
+    final scoreA = ((_match['score_a'] ?? 0) as num).toInt();
+    final scoreB = ((_match['score_b'] ?? 0) as num).toInt();
+    if (scoreA >= _raceTo || scoreB >= _raceTo) {
+      _autoEnding = true;
+      _shotTimer?.cancel();
+      _uiTimer?.cancel();
+      // Brief pause so the winning score renders before the transition
+      Future.delayed(const Duration(milliseconds: 700), () {
+        if (mounted) _goToEnd();
+      });
+    }
+  }
+
+  void _goToEnd() {
+    final data = Map.from(_match)..['_elapsed'] = _fmtChrono();
+    Navigator.of(context).pushReplacementNamed('/end', arguments: data);
   }
 
   Future<void> _undoFrame(String player) async {
@@ -259,9 +288,7 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
     final scoreA = _match['score_a'] ?? 0;
     final scoreB = _match['score_b'] ?? 0;
     final pool = _match['pool'];
-    final raceTo = _match['phase'] == 'knockout'
-        ? (_match['competition']?['knockout_race_to'] ?? _match['competition']?['race_to'] ?? 7)
-        : (_match['competition']?['pool_race_to'] ?? _match['competition']?['race_to'] ?? 3);
+    final raceTo = _raceTo;
     final warningA = _match['warning_a'] == true;
     final warningB = _match['warning_b'] == true;
 
@@ -470,8 +497,7 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
               child: SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
-                  onPressed: () => Navigator.of(context)
-                      .pushReplacementNamed('/end', arguments: _match),
+                  onPressed: _goToEnd,
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: C8P.felt2),
                     foregroundColor: C8P.felt2,
