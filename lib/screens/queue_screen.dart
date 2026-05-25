@@ -29,12 +29,20 @@ class _QueueScreenState extends State<QueueScreen> {
     setState(() { _loading = true; _error = ''; });
     try {
       final api = await ApiService.create();
-      final results = await Future.wait([api.me(), api.queue(), api.available()]);
+      // me() + queue() are critical — let them fail loudly
+      final results = await Future.wait([api.me(), api.queue()]);
+
+      // available() may not be deployed yet — degrade gracefully
+      List available = [];
+      try {
+        available = await api.available();
+      } catch (_) {}
+
       if (!mounted) return;
       setState(() {
         _user      = results[0] as Map;
         _mine      = results[1] as List;
-        _available = results[2] as List;
+        _available = available;
         _loading   = false;
       });
     } catch (e, s) {
