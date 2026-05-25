@@ -503,7 +503,10 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
           children: [
             // Seed + warning badge
             Row(children: [
-              Text('SEED #${p?['id']}', style: C8PTypo.mono(size: 9)),
+              Text(
+                p?['id'] != null ? 'SEED #${p!['id']}' : player,
+                style: C8PTypo.mono(size: 9),
+              ),
               if (hasWarning) ...[
                 const SizedBox(width: 6),
                 Container(
@@ -515,7 +518,7 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
             ]),
             const SizedBox(height: 4),
             Text(
-              '${p?['first_name']}\n${p?['last_name']}',
+              '${p?['first_name'] ?? '—'}\n${p?['last_name'] ?? ''}',
               style: C8PTypo.sans(size: 11, weight: FontWeight.w700)
                   .copyWith(height: 1.1),
             ),
