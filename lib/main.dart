@@ -25,6 +25,7 @@ class Club8PoolApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Club 8 Pool · Arbitre',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: C8P.ink,
         colorScheme: ColorScheme.fromSeed(seedColor: C8P.felt2, brightness: Brightness.dark),
