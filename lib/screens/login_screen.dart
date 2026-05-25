@@ -14,7 +14,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _card = TextEditingController(text: 'FGB-ARB-2026-0024');
+  final _card = TextEditingController();
   final _pin = TextEditingController();
   bool _loading = false;
   String? _error;
@@ -25,11 +25,21 @@ class _LoginScreenState extends State<LoginScreen> {
       final api = await ApiService.create();
       await api.login(_card.text.trim(), _pin.text.trim());
       if (mounted) Navigator.of(context).pushReplacementNamed('/queue');
-    } catch (e) {
-      setState(() => _error = 'Identifiants invalides');
+    } on Exception catch (e) {
+      String msg = 'Identifiants invalides';
+      final raw = e.toString();
+      if (raw.contains('SocketException') || raw.contains('connectTimeout') || raw.contains('ClientException')) {
+        msg = 'Serveur injoignable. Vérifiez votre connexion.';
+      }
+      setState(() => _error = msg);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
+  }
+
+  void _fillDemo(String card) {
+    _card.text = card;
+    _pin.text = '12345';
   }
 
   @override
@@ -62,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 36),
               Text('CARTE FGB', style: C8PTypo.mono(size: 9, letterSpacing: 0.2)),
               const SizedBox(height: 8),
-              _input(_card, hint: 'FGB-ARB-XXXX'),
+              _input(_card, hint: 'ICN-ARB-XXX'),
               const SizedBox(height: 14),
               Text('CODE PIN', style: C8PTypo.mono(size: 9, letterSpacing: 0.2)),
               const SizedBox(height: 8),
@@ -71,6 +81,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 14),
                 Text(_error!, style: C8PTypo.mono(size: 10, color: C8P.live)),
               ],
+              const SizedBox(height: 16),
+              Wrap(spacing: 8, children: [
+                _demoChip('Eric', 'ICN-ARB-001'),
+                _demoChip('T-One', 'ICN-ARB-002'),
+              ]),
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
@@ -121,6 +136,24 @@ class _LoginScreenState extends State<LoginScreen> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           border: InputBorder.none,
         ),
+      ),
+    );
+  }
+
+  Widget _demoChip(String label, String card) {
+    return InkWell(
+      onTap: () => _fillDemo(card),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          border: Border.all(color: C8P.lineStrong),
+          color: C8P.ink2,
+        ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Text(label, style: C8PTypo.sans(size: 11, color: C8P.chalk, weight: FontWeight.w700)),
+          const SizedBox(width: 6),
+          Text(card, style: C8PTypo.mono(size: 9, color: C8P.mute)),
+        ]),
       ),
     );
   }

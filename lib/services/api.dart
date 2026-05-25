@@ -2,9 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
+  // Production par défaut. Override en dev avec :
+  //   flutter run --dart-define=API_BASE=http://10.0.2.2:8089/api
   static const String baseUrl = String.fromEnvironment(
     'API_BASE',
-    defaultValue: 'http://10.0.2.2:8089/api',
+    defaultValue: 'https://club8pool.com/api',
   );
 
   final Dio _dio;
@@ -21,6 +23,7 @@ class ApiService {
       receiveTimeout: const Duration(seconds: 15),
       headers: {
         'Accept': 'application/json',
+        'Content-Type': 'application/json',
         if (token != null) 'Authorization': 'Bearer $token',
       },
     ));
@@ -41,6 +44,11 @@ class ApiService {
     return response.data;
   }
 
+  Future<Map<String, dynamic>> me() async {
+    final r = await _dio.get('/referee/me');
+    return r.data;
+  }
+
   Future<List<dynamic>> queue() async {
     final r = await _dio.get('/referee/queue');
     return r.data as List;
@@ -56,8 +64,14 @@ class ApiService {
     return r.data;
   }
 
-  Future<Map<String, dynamic>> frame(int id, String winner) async {
-    final r = await _dio.post('/referee/matches/$id/frame', data: {'winner': winner});
+  /// Mark a frame winner. [winner] must be 'A' or 'B' (or 'draw' for a tie).
+  /// Optionally flag a warning given to one of the players.
+  Future<Map<String, dynamic>> frame(int id, String winner, {bool? warningA, bool? warningB}) async {
+    final r = await _dio.post('/referee/matches/$id/frame', data: {
+      'winner': winner,
+      if (warningA != null) 'warning_a': warningA,
+      if (warningB != null) 'warning_b': warningB,
+    });
     return r.data;
   }
 
@@ -84,5 +98,16 @@ class ApiService {
   Future<bool> isAuthenticated() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('token') != null;
+  }
+
+  /// Quick GET to verify the API is reachable + valid token (if any).
+  /// Returns true on 2xx, false on any error.
+  Future<bool> ping() async {
+    try {
+      await _dio.get('/referee/me');
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 }

@@ -22,20 +22,19 @@ flutter pub get
 flutter run
 ```
 
-URL d'API surchargeable :
+L'app cible **https://club8pool.com/api** par défaut. Pour pointer vers un serveur local en dev :
 
 ```bash
-flutter run --dart-define=API_BASE=https://api.club8pool.ga/api
+flutter run --dart-define=API_BASE=http://10.0.2.2:8089/api      # Android emulator
+flutter run --dart-define=API_BASE=http://localhost:8089/api     # iOS simulator
 ```
-
-Par défaut : `http://10.0.2.2:8089/api` (Android emulator vers `php artisan serve --port=8089`).
 
 ## Comptes de démo
 
-| Carte FGB | PIN |
-| --- | --- |
-| `FGB-ARB-2026-0024` | `12345` |
-| `FGB-ARB-2026-0031` | `12345` |
+| Arbitre | Carte FGB | PIN |
+| --- | --- | --- |
+| Eric | `ICN-ARB-001` | `12345` |
+| T-One | `ICN-ARB-002` | `12345` |
 
 ## Structure
 
