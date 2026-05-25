@@ -70,7 +70,7 @@ class _EndMatchScreenState extends State<EndMatchScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${widget.match['round']} · TABLE 1',
+                  Text('${widget.match['round']} · ${widget.match['table']?['name']?.toString().toUpperCase() ?? 'TABLE —'}',
                        style: C8PTypo.mono(size: 9, letterSpacing: 0.22)),
                   const SizedBox(height: 14),
                   Row(
@@ -176,7 +176,7 @@ class _EndMatchScreenState extends State<EndMatchScreen> {
             children: [
               Text('${p?['first_name']} ${p?['last_name']}',
                    style: C8PTypo.sans(size: 12, weight: FontWeight.w700)),
-              Text(isSigned ? '✓ SIGNÉ' : '⚠ EN ATTENTE',
+              Text(isSigned ? '✓ SIGNÉ' : '! EN ATTENTE',
                    style: C8PTypo.mono(size: 9, color: isSigned ? C8P.felt2 : C8P.live, letterSpacing: 0.14)),
             ],
           ),

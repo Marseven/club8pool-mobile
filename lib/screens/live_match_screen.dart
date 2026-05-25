@@ -84,9 +84,17 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
                   ),
                   Column(
                     children: [
-                      Text('${_match['round']} · TABLE 1', style: C8PTypo.mono(size: 9, letterSpacing: 0.2)),
+                      Text(
+                        '${_match['round']} · ${_match['table']?['name']?.toString().toUpperCase() ?? 'TABLE —'}',
+                        style: C8PTypo.mono(size: 9, letterSpacing: 0.2),
+                      ),
                       const SizedBox(height: 2),
-                      Text('Coupe du Gabon 8-Ball', style: C8PTypo.sans(size: 13, weight: FontWeight.w700)),
+                      Text(
+                        _match['competition']?['name'] ?? '',
+                        style: C8PTypo.sans(size: 13, weight: FontWeight.w700),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ],
                   ),
                   Container(
@@ -135,7 +143,7 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('FRAME ${scoreA + scoreB + 1} · RACE TO 7',
+                      Text('FRAME ${scoreA + scoreB + 1} · RACE TO ${_match['phase'] == 'knockout' ? (_match['competition']?['knockout_race_to'] ?? _match['competition']?['race_to'] ?? 7) : (_match['competition']?['pool_race_to'] ?? _match['competition']?['race_to'] ?? 3)}',
                            style: C8PTypo.mono(size: 10, letterSpacing: 0.14)),
                       Text('MATCH ${_fmt(_matchSeconds)}', style: C8PTypo.mono(size: 10, letterSpacing: 0.14)),
                     ],
@@ -211,7 +219,7 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('⏸ PAUSE', style: C8PTypo.mono(size: 11, letterSpacing: 0.14)),
+                  Text('‖ PAUSE', style: C8PTypo.mono(size: 11, letterSpacing: 0.14)),
                   OutlinedButton(
                     onPressed: () => Navigator.of(context).pushReplacementNamed('/end', arguments: _match),
                     style: OutlinedButton.styleFrom(
@@ -222,7 +230,7 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
                     child: Text('FIN DE MATCH',
                          style: C8PTypo.sans(size: 12, color: C8P.felt2, weight: FontWeight.w700).copyWith(letterSpacing: 1)),
                   ),
-                  Text('⏏ ARRÊT', style: C8PTypo.mono(size: 11, color: C8P.live, letterSpacing: 0.14)),
+                  Text('■ ARRÊT', style: C8PTypo.mono(size: 11, color: C8P.live, letterSpacing: 0.14)),
                 ],
               ),
             ),

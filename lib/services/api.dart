@@ -48,7 +48,7 @@ class ApiService {
         handler.next(response);
       },
       onError: (e, handler) {
-        _log('⚠ ${e.response?.statusCode ?? '?'} ${e.requestOptions.method} ${e.requestOptions.uri}\n'
+        _log('! ${e.response?.statusCode ?? '?'} ${e.requestOptions.method} ${e.requestOptions.uri}\n'
             '  type: ${e.type}\n'
             '  message: ${e.message}\n'
             '  response: ${_truncate(e.response?.data)}');

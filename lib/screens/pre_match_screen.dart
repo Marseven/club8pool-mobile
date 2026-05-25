@@ -103,7 +103,7 @@ class PreMatchScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
                   ),
-                  child: Text('▶ DÉMARRER LE MATCH',
+                  child: Text('▸ DÉMARRER LE MATCH',
                        style: C8PTypo.sans(size: 14, color: C8P.ink, weight: FontWeight.w800).copyWith(letterSpacing: 1.4)),
                 ),
               ),
