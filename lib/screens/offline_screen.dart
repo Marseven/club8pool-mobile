@@ -119,7 +119,7 @@ class OfflineScreen extends StatelessWidget {
                     foregroundColor: C8P.chalk,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  child: Text('↻ FORCER UNE NOUVELLE TENTATIVE',
+                  child: Text('⟳ FORCER UNE NOUVELLE TENTATIVE',
                        style: C8PTypo.sans(size: 12, weight: FontWeight.w700).copyWith(letterSpacing: 1.2)),
                 ),
               ),
